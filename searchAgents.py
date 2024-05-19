@@ -456,38 +456,49 @@ def foodHeuristic(state, problem):
     "*** YOUR CODE HERE ***"
     from util import manhattanDistance
     from itertools import combinations
+# 1st try 2/4
+    # position, foodGrid = state
+    # foodList = foodGrid.asList()
+    # if not foodList:
+    #     return 0
+    # distances = [abs(position[0] - food[0]) + abs(position[1] - food[1]) for food in foodList]
+    # return min(distances)
 
+# 2nd try 3/4
+#     position, foodGrid = state
+#     foodList = foodGrid.asList()
+#     if not foodList:
+#         return 0
+#     distances = [abs(position[0] - food[0]) + abs(position[1] - food[1]) for food in foodList]
+#     return max(distances)
+
+# 3rd try not admissible
+#     position, foodGrid = state
+#     foodList = foodGrid.asList()
+#     if not foodList:
+#         return 0
+#     return sum([abs(position[0] - food[0]) + abs(position[1] - food[1]) for food in foodList])
+
+# 4th try 4/4
     position, foodGrid = state
     foodList = foodGrid.asList()
-
     if not foodList:
         return 0
 
-    # Calculate the maximum Manhattan distance from the current position to any food dot
-    maxDistance = max(manhattanDistance(position, food) for food in foodList)
-    print(f"maxDistance: {maxDistance}")
+    # Maximum distance between any two food pellets
+    max_food_distance = 0
+    for food1 in foodList:
+        for food2 in foodList:
+            distance = abs(food1[0] - food2[0]) + abs(food1[1] - food2[1])
+            if distance > max_food_distance:
+                max_food_distance = distance
 
-    # Calculate the minimum spanning tree (MST) of all the food dots
-    edges = [(manhattanDistance(food1, food2), food1, food2) for food1, food2 in combinations(foodList, 2)]
-    edges.sort()
+    # Distance from Pacman to the closest food
+    closest_food_distance = min(abs(position[0] - food[0]) + abs(position[1] - food[1]) for food in foodList)
 
-    mst = 0
-    groups = {food: {food} for food in foodList}
+    # Heuristic combining both distances
+    return max_food_distance + closest_food_distance
 
-    for distance, food1, food2 in edges:
-        if groups[food1] is not groups[food2]:
-            mst += distance
-            if len(groups[food1]) < len(groups[food2]):
-                food1, food2 = food2, food1
-            groups[food1].update(groups[food2])
-            for food in groups[food2]:
-                groups[food] = groups[food1]
-
-    print(f"mst: {mst}")
-    print(f"maxDistance + mst: {maxDistance + mst}")
-
-    return maxDistance + mst
-    # return 0
 
 
 class ClosestDotSearchAgent(SearchAgent):
