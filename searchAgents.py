@@ -452,10 +452,7 @@ def foodHeuristic(state, problem):
     Subsequent calls to this heuristic can access
     problem.heuristicInfo['wallCount']
     """
-    position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    from util import manhattanDistance
-    from itertools import combinations
 # 1st try 2/4
     # position, foodGrid = state
     # foodList = foodGrid.asList()
