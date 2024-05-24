@@ -125,7 +125,48 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         Returns the minimax action using self.depth and self.evaluationFunction
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return self.alpha_beta(gameState, 0, 0, float('-inf'), float('inf'))[1]
+
+    def alpha_beta(self, gameState, depth, agentIndex, alpha, beta):
+        if gameState.isWin() or gameState.isLose() or depth == self.depth:
+            return self.evaluationFunction(gameState), None
+
+        if agentIndex == 0:
+            return self.max_value(gameState, depth, alpha, beta)
+        else:
+            return self.min_value(gameState, depth, agentIndex, alpha, beta)
+
+    def max_value(self, gameState, depth, alpha, beta):
+        v = float('-inf')
+        best_action = None
+        for action in gameState.getLegalActions(0):
+            successor = gameState.generateSuccessor(0, action)
+            value = self.alpha_beta(successor, depth, 1, alpha, beta)[0]
+            if value > v:
+                v = value
+                best_action = action
+            if v > beta:
+                return v, best_action
+            alpha = max(alpha, v)
+        return v, best_action
+
+    def min_value(self, gameState, depth, agentIndex, alpha, beta):
+        v = float('inf')
+        best_action = None
+        for action in gameState.getLegalActions(agentIndex):
+            successor = gameState.generateSuccessor(agentIndex, action)
+            if agentIndex == gameState.getNumAgents() - 1:
+                value = self.alpha_beta(successor, depth + 1, 0, alpha, beta)[0]
+            else:
+                value = self.alpha_beta(successor, depth, agentIndex + 1, alpha, beta)[0]
+            if value < v:
+                v = value
+                best_action = action
+            if v < alpha:
+                return v, best_action
+            beta = min(beta, v)
+        return v, best_action
+
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
