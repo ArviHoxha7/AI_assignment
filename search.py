@@ -148,20 +148,13 @@ def uniformCostSearch(problem):
     priority_queue.push((problem.getStartState(), [], 0), 0)
 
     while not priority_queue.isEmpty():
-        # Pop the current state, path, and cost from the priority queue
         current_state, path, cost = priority_queue.pop()
-        # If the current state is the goal state, return the path
         if problem.isGoalState(current_state):
             return path
-        # If the current state is not in the visited set
         if current_state not in visited:
-            # Add the current state to the visited set
             visited.add(current_state)
-            # For each successor of the current state
             for successor, direction, step_cost in problem.getSuccessors(current_state):
-                # If the successor is not in the visited set
                 if successor not in visited:
-                    # Push the successor, the path to the successor, and the cost to the successor into the priority queue
                     priority_queue.push((successor, path + [direction], cost + step_cost), cost + step_cost)
 
     return path
@@ -186,20 +179,13 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     priority_queue.push((problem.getStartState(), [], 0), 0)
 
     while not priority_queue.isEmpty():
-        # Pop the current state, path, and cost from the priority queue
         current_state, path, cost = priority_queue.pop()
-        # If the current state is the goal state, return the path
         if problem.isGoalState(current_state):
             return path
-        # If the current state is not in the visited set
         if current_state not in visited:
-            # Add the current state to the visited set
             visited.add(current_state)
-            # For each successor of the current state
             for successor, direction, step_cost in problem.getSuccessors(current_state):
-                # If the successor is not in the visited set
                 if successor not in visited:
-                    # Push the successor, the path to the successor, and the cost to the successor into the priority queue
                     priority_queue.push((successor, path + [direction], cost + step_cost), cost + step_cost + heuristic(successor, problem))
 
     return path

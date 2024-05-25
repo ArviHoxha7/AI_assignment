@@ -113,7 +113,6 @@ class MinimaxAgent(MultiAgentSearchAgent):
                 best_action = action
         return v, best_action
 
-        # util.raiseNotDefined()
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
@@ -218,7 +217,6 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
             v += p * value
         return v, best_action
         
-        # util.raiseNotDefined()
 
 def betterEvaluationFunction(currentGameState):
     """
@@ -228,7 +226,36 @@ def betterEvaluationFunction(currentGameState):
     DESCRIPTION: <write something here so we know what you did>
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    pacman = currentGameState.getPacmanPosition()
+    food = currentGameState.getFood()
+    ghosts = currentGameState.getGhostStates()
+    capsules = currentGameState.getCapsules()
+    score = currentGameState.getScore()
+    predict_score = score
+
+    # Distance to closest food
+    food_list = food.asList()
+    if food_list:
+        closest_food_distance = min([manhattanDistance(pacman, food) for food in food_list])
+        predict_score += 1.0 / closest_food_distance
+
+    # Distance to ghosts
+    ghost_distances = [manhattanDistance(pacman, ghost.getPosition()) for ghost in ghosts]
+    for ghost, dist in zip(ghosts, ghost_distances):
+        if ghost.scaredTimer > 0:
+            predict_score += 10.0 / dist
+        else:
+            if dist > 0:
+                predict_score -= 2.0 / dist
+
+    # Number of remaining food pellets
+    predict_score -= 2.0 * len(food_list)
+
+    # Number of remaining power pellets
+    predict_score -= 20.0 * len(capsules)
+
+    return predict_score
+
 
 # Abbreviation
 better = betterEvaluationFunction

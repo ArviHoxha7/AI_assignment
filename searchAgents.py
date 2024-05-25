@@ -493,7 +493,6 @@ def foodHeuristic(state, problem):
     # Distance from Pacman to the closest food
     closest_food_distance = min(abs(position[0] - food[0]) + abs(position[1] - food[1]) for food in foodList)
 
-    # Heuristic combining both distances
     return max_food_distance + closest_food_distance
 
 
